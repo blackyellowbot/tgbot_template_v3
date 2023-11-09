@@ -10,6 +10,7 @@ from tgbot.config import load_config, Config
 from tgbot.handlers import routers_list
 from tgbot.middlewares.config import ConfigMiddleware
 from tgbot.services import broadcaster
+from tgbot.utils.postgresql import Database
 
 
 async def on_startup(bot: Bot, admin_ids: list[int]):
@@ -95,7 +96,8 @@ async def main():
     dp.include_routers(*routers_list)
 
     register_global_middlewares(dp, config)
-
+    dtbs = Database()
+    await dtbs.create_table_users()
     await on_startup(bot, config.tg_bot.admin_ids)
     await dp.start_polling(bot)
 
